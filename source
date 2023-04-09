@@ -325,15 +325,14 @@ end
 local loop2 = nil
 local Toggle1 = Tab1:NewToggle("Auto leave when health is under 15", false, function(value)
 getgenv().yes4 = value
-
+local clone = game:GetService('CoreGui').HUD.text:Clone()
 	if getgenv().yes4 then
 		loop2 = game:GetService('RunService').RenderStepped:Connect(leave)
-	local clone = game:GetService('CoreGui').HUD.text:Clone()
 	clone.Parent = game:GetService('CoreGui').HUD.Frame 
 	clone.Name = "AutoLeave"
 	clone.Text = "AutoLeave"
 	else
-	loop:Disconnect()
+	loop2:Disconnect()
 	game:GetService('CoreGui').HUD.Frame.AutoLeave:Destroy()
 end
 end)
@@ -584,9 +583,32 @@ getgenv().fullbright = value
 	loopagain:Disconnect()
 end
 end)
-
-
-
+local function drop()
+		game:GetService("ReplicatedStorage"):WaitForChild("GameRemotes"):WaitForChild("DropAllGui"):InvokeServer()
+		
+end
+local condection
+local Toggle1 = Tab3:NewToggle("instant drop, PRESS F", false, function(value)
+getgenv().idk = value
+local uis = game:GetService('UserInputService')
+local clone = game:GetService('CoreGui').HUD.text:Clone()
+if getgenv().idk then
+	for i  = 1,5 do
+Notif:Notify("ONLY WORKS IF UR HOLDING IT ON A GUI NOT ON THE HOTBAR PRESS E AND CLICK ON THE ITEM U WANT TO INSTANT DROP AND PRESS F", 5, "information")
+end
+		clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "InstantDrop"
+	clone.Text = "InstantDrop"
+	condection = uis.InputBegan:Connect(function(input,gp)
+		if input.KeyCode == Enum.KeyCode.F then
+		drop()
+	end
+	end)
+	else
+	game:GetService('CoreGui').HUD.Frame.InstantDrop:Destroy()
+	condection:Disconnect()
+end
+end)
 local Ping = Instance.new("ScreenGui")
 local TextLabel = Instance.new("TextLabel")
 
