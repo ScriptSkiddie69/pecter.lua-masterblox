@@ -1,0 +1,622 @@
+	if game:GetService('CoreGui'):FindFirstChild('HUD') then
+game:GetService('CoreGui'):FindFirstChild('HUD'):Destroy()
+	end
+	local function getplrname(shortName)
+   shortName = string.lower(shortName)
+   for _,Player in pairs(game.Players:GetPlayers()) do
+       local playerName = string.lower(Player.Name) and string.lower(Player.DisplayName)
+       if string.match(playerName, "^"..shortName) then
+           return Player
+       end
+   end
+end
+	getgenv().bla = true
+	local c = workspace.CurrentCamera
+local ps = game:GetService("Players")
+local lp = ps.LocalPlayer
+local rs = game:GetService("RunService")
+getgenv().chek = false
+	local function esp(p,cr)
+	local h = cr:WaitForChild("Humanoid")
+	local hrp = cr:WaitForChild("Head")
+
+	local text = Drawing.new("Text")
+	text.Visible = false
+	text.Center = true
+	text.Outline = true 
+	text.Font = 3
+	text.Size = 16
+	text.Color = Color3.new(170,170,170)
+
+	local conection
+	local conection2
+	local conection3
+
+	local function dc()
+		text.Visible = false
+		text:Remove()
+		if conection then
+			conection:Disconnect()
+			conection = nil 
+		end
+		if conection2 then
+			conection2:Disconnect()
+			conection2 = nil 
+		end
+		if conection3 then
+			conection3:Disconnect()
+			conection3 = nil 
+		end
+	end
+
+	conection2 = cr.AncestryChanged:Connect(function(_,parent)
+		if not parent then
+			dc()
+		end
+	end)
+
+	conection3 = h.HealthChanged:Connect(function(v)
+		if (v<=0) or (h:GetState() == Enum.HumanoidStateType.Dead) then
+			dc()
+		end
+	end)
+
+	conection = rs.RenderStepped:Connect(function()
+		local hrp_pos,hrp_onscreen = c:WorldToViewportPoint(hrp.Position)
+		if getgenv().chek and hrp_onscreen then
+			text.Position = Vector2.new(hrp_pos.X, hrp_pos.Y - 27)
+			text.Text = "[ "..p.Name.." ] |Health:| [ "..p.Character.Humanoid.Health
+			text.Visible = true
+		else
+			text.Visible = false
+		end
+	end)
+end
+
+local function p_added(p)
+	if p.Character then
+		esp(p,p.Character)
+	end
+	p.CharacterAdded:Connect(function(cr)
+		esp(p,cr)
+	end)
+end
+
+for i,p in next, ps:GetPlayers() do 
+	if p ~= lp then
+		p_added(p)
+	end
+end
+
+ps.PlayerAdded:Connect(p_added)
+	getgenv().teamcheck = true
+	local tracer = false
+	local Players = game:GetService("Players"):GetChildren()
+	local localPlayer = game.Players.LocalPlayer
+	local camera = game:GetService("Workspace").CurrentCamera
+	local CurrentCamera = Workspace.CurrentCamera
+	local mouse = localPlayer:GetMouse()
+	for i,v in pairs(game.Players:GetPlayers()) do
+		local Tracer = Drawing.new("Line")
+		Tracer.Visible = false
+		Tracer.Thickness = 1
+		Tracer.Transparency = 1
+
+		local function lineesp()
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= localPlayer and v.Character.Humanoid.Health > 0 then
+					local Vector, OnScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
+					local m,y = camera:worldToViewportPoint(mouse.Hit.Position)
+					if OnScreen then
+						Tracer.From = Vector2.new(m.X,m.Y)
+						Tracer.To = Vector2.new(Vector.X, Vector.Y)
+						Tracer.Visible = tracer
+						Tracer.Color = v.TeamColor.Color
+					else
+						Tracer.Visible = false
+					end
+				else
+					Tracer.Visible = false
+				end
+			end)
+		end
+		coroutine.wrap(lineesp)()
+	end
+
+	game.Players.PlayerAdded:Connect(function(v)
+			local Tracer = Drawing.new("Line")
+		Tracer.Visible = false
+		Tracer.Thickness = 1
+		Tracer.Transparency = 1
+
+		local function lineesp()
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= localPlayer and v.Character.Humanoid.Health > 0 then
+					local Vector, OnScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
+	 local m,y = camera:worldToViewportPoint(mouse.Hit.Position)
+					if OnScreen then
+						Tracer.From = Vector2.new(m.X,m.Y)
+						Tracer.To = Vector2.new(Vector.X, Vector.Y)
+						Tracer.Color = v.TeamColor.Color
+						Tracer.Visible = tracer
+					else
+						Tracer.Visible = false
+					end
+				else
+					Tracer.Visible = false
+				end
+			end)
+		end
+		coroutine.wrap(lineesp)()
+	end)
+
+local HUD = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Client = Instance.new("TextLabel")
+local UIListLayout = Instance.new("UIListLayout")
+local text = Instance.new("TextLabel")
+
+--Properties:
+
+HUD.Name = "HUD"
+HUD.Parent = game:GetService('CoreGui')
+HUD.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = HUD
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.BackgroundTransparency = 1.000
+Frame.Size = UDim2.new(1, 0, 1, 0)
+Frame.SizeConstraint = Enum.SizeConstraint.RelativeXX
+
+Client.Name = "Client"
+Client.Parent = Frame
+Client.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Client.BackgroundTransparency = 1.000
+Client.Position = UDim2.new(0.939012527, 0, 0, 0)
+Client.Size = UDim2.new(0, 103, 0, 50)
+Client.Font = Enum.Font.SourceSans
+Client.Text = "Pecter.lua client v0.1"
+Client.TextColor3 = Color3.fromRGB(58, 255, 173)
+Client.TextScaled = true
+Client.TextSize = 14.000
+Client.TextWrapped = true
+
+UIListLayout.Parent = Frame
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+text.Name = "text"
+text.Parent = HUD
+text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+text.BackgroundTransparency = 1.000
+text.Position = UDim2.new(410401056, 0, 0, 0)
+text.Size = UDim2.new(0, 103, 0, 50)
+text.Font = Enum.Font.SourceSans
+text.Text = ""
+text.TextColor3 = Color3.fromRGB(58, 255, 173)
+text.TextScaled = true
+text.TextSize = 14.000
+text.TextWrapped = true
+
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Consistt/Ui/main/UnLeaked"))()
+local vers = "v0.1"
+library.rank = "peasant"
+local Wm = library:Watermark("pecter.lua client " .. vers ..  " | " .. library:GetUsername() .. " | rank: " .. library.rank)
+local FpsWm = Wm:AddWatermark("fps: " .. library.fps)
+coroutine.wrap(function()
+    while wait(.75) do
+        FpsWm:Text("fps: " .. library.fps)
+    end
+end)()
+
+local Notif = library:InitNotifications()
+
+for i = 20,0,-1 do 
+    task.wait(0.05)
+    local LoadingXSX = Notif:Notify("Client loading! be patient", 3, "information") -- notification, alert, error, success, information
+end 
+
+library.title = "Pecter.lua client/MasterBlox, version 0.1"
+
+library:Introduction()
+wait(1)
+local Init = library:Init()
+
+local Tab1 = Init:NewTab("Combat")
+local Tab2 = Init:NewTab("Exploits")
+local Tab3 = Init:NewTab("Misc")
+local Tab4 = Init:NewTab("Movement")
+local Tab5 = Init:NewTab("Render")
+local Tab6 = Init:NewTab("World")
+local Tab7 = Init:NewTab("Credits")
+local Toggle1 = Tab1:NewToggle("KillAura", false, function(value)
+	
+	getgenv().yes = value
+	if getgenv().yes then
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "KillAura"
+	clone.Text = "KillAura"
+	else
+	game:GetService('CoreGui').HUD.Frame.KillAura:Destroy()
+end
+		while true do wait()
+		pcall(function()
+		if getgenv().yes then
+	for i,v in pairs(game.Players:GetPlayers()) do
+		if v ~= game.Players.LocalPlayer then
+		local magnitude = (v.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+		if magnitude < 10 then
+local args = {
+    [1] = workspace:WaitForChild(v.Name),
+    [2] = "G#M;IVT;#})jAkm*2De!"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("GameRemotes"):WaitForChild("Attack"):InvokeServer(unpack(args))
+end
+end
+end
+end
+end)
+end
+end):AddKeybind(Enum.KeyCode.X)
+local distance = 500
+local Slider1 = Tab1:NewSlider("TpAura Distance", "", true, "/", {min = 1, max = 500, default = 500}, function(value)
+    distance = value
+end)
+local function tp()
+	for i,v in pairs(game.Players:GetPlayers()) do
+		if v ~= game.Players.LocalPlayer and v.Character.Humanoid.Health ~= 0 then
+		local pHrp = game.Players.LocalPlayer.Character.HumanoidRootPart
+		local magnitude = (v.Character.HumanoidRootPart.Position - pHrp.Position).Magnitude
+		
+		if magnitude < distance then
+			pHrp.CFrame = v.Character.HumanoidRootPart.CFrame
+		end
+	end
+end
+end
+
+local loop = nil
+local Toggle1 = Tab1:NewToggle("TpAura (turn on killaura if u want)", false, function(value)
+getgenv().yes2 = value
+	if getgenv().yes2 then
+		loop = game:GetService('RunService').RenderStepped:Connect(tp)
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "TpAura"
+	clone.Text = "TpAura"
+	else
+	game:GetService('CoreGui').HUD.Frame.TpAura:Destroy()
+	loop:Disconnect()
+end
+
+
+end):AddKeybind(Enum.KeyCode.Z)
+local target = "amongus"
+local Textbox2 = Tab1:NewTextbox("Target", "", "2", "all", "medium", true, false, function(val)
+    target = getplrname(val)
+end)
+local function kill()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[tostring(target)].Character.Head.CFrame
+end
+local anotherloop = nil
+local Toggle1 = Tab1:NewToggle("Attempt to instant kill target that is standing still", false, function(value)
+getgenv().yes3 = value
+print(target)
+	if getgenv().yes3 then
+		Notif:Notify("Attempting to kill "..tostring(target).." THIS ONLY WORKS WHEN THE TARGET IS IN A CAVE OR UNDERGROUND", 3, "information")
+		anotherloop = game:GetService('RunService').RenderStepped:Connect(kill)
+		
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "Instant"
+	clone.Text = "Attempting to instant kill"
+	else
+	game:GetService('CoreGui').HUD.Frame.Instant:Destroy()
+	anotherloop:Disconnect()
+end
+end)
+local function leave()
+	if game.Players.LocalPlayer.Character.Humanoid.Health < 15 then
+		game:Shutdown()
+	end
+end
+local loop2 = nil
+local Toggle1 = Tab1:NewToggle("Auto leave when health is under 15", false, function(value)
+getgenv().yes4 = value
+
+	if getgenv().yes4 then
+		loop2 = game:GetService('RunService').RenderStepped:Connect(leave)
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "AutoLeave"
+	clone.Text = "AutoLeave"
+	else
+	loop:Disconnect()
+	game:GetService('CoreGui').HUD.Frame.AutoLeave:Destroy()
+end
+end)
+local Toggle1 = Tab2:NewToggle("Packet Mine press T", false, function(value)
+		getgenv().yes5 = value
+	if getgenv().yes5 then
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "PacketMine"
+	clone.Text = "PacketMine"
+	else
+	game:GetService('CoreGui').HUD.Frame.PacketMine:Destroy()
+end
+	local uis = game:GetService('UserInputService')
+	
+	uis.InputBegan:Connect(function(input,gp)
+		if getgenv().yes5 then
+		if input.KeyCode == Enum.KeyCode.T then--input.UserInputType == Enum.UserInputType.MouseButton1 then
+local mouseLocation = game.Players.LocalPlayer:GetMouse().Target
+local t = mouseLocation.Position.X--math.floor(mouseLocation.X)
+local r = mouseLocation.Position.Y--math.floor(mouseLocation.Y)
+local e = mouseLocation.Position.Z--math.floor(mouseLocation.Z)
+local x = math.floor(t/3)
+local y = math.floor(r/3)
+local z = math.floor(e/3)
+local args = {
+    [1] = x,
+    [2] = y,
+    [3] = z
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("GameRemotes"):WaitForChild("BreakBlock"):InvokeServer(unpack(args))
+
+		
+end
+end
+end)
+end)
+local speed = 100
+local Slider1 = Tab4:NewSlider("Strafe speed", "", true, "/", {min = 1, max = 500, default = 100}, function(value)
+    speed = value
+end)
+
+local Toggle1 = Tab4:NewToggle("Strafe", false, function(value)
+	local UserInputService = game:GetService('UserInputService')
+	getgenv().yes6 = value
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes6 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "Strafe"
+	clone.Text = "Strafe speed : "..speed
+	else
+	game:GetService('CoreGui').HUD.Frame.Strafe:Destroy()
+end
+	while getgenv().yes6 do
+    				game:GetService('RunService').RenderStepped:Wait()
+    				clone.Text = "Strafe speed : "..speed
+				if game:GetService('UserInputService'):IsKeyDown("W") or game:GetService('UserInputService'):IsKeyDown("A") or game:GetService('UserInputService'):IsKeyDown("S") or game:GetService('UserInputService'):IsKeyDown("D") and game.Players.LocalPlayer.Character then      
+					local add = 0   
+					local Root = game.Players.LocalPlayer.Character.HumanoidRootPart          
+					if UserInputService:IsKeyDown("A") then add = 90 end      
+					if UserInputService:IsKeyDown("S") then add = 180 end      
+					if UserInputService:IsKeyDown("D") then add = 270 end      
+					if UserInputService:IsKeyDown("A") and UserInputService:IsKeyDown("W") then add = 45 end      
+					if UserInputService:IsKeyDown("D") and UserInputService:IsKeyDown("W") then add = 315 end      
+					if UserInputService:IsKeyDown("D") and UserInputService:IsKeyDown("S") then add = 225 end      
+					if UserInputService:IsKeyDown("A") and UserInputService:IsKeyDown("S") then add = 145 end   
+					local x, y, z = workspace.CurrentCamera.CFrame:ToOrientation()        
+					local rot = CFrame.new(workspace.CurrentCamera.CFrame.Position) * CFrame.Angles(0,y,0) * CFrame.Angles(0,math.rad(add),0)      
+						Root.CFrame = Root.CFrame + Vector3.new(rot.LookVector.X,0,rot.LookVector.Z) * speed/50            
+				end
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        if game.Players.LocalPlayer.Character.Humanoid:GetState() ~= Enum.HumanoidStateType.Freefall then
+            game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end
+    end
+end
+	
+end):AddKeybind(Enum.KeyCode.R)
+
+	local Toggle1 = Tab5:NewToggle("Trace", false, function(value)
+		getgenv().yes7 = value
+			local UserInputService = game:GetService('UserInputService')
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes7 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "Trace"
+	clone.Text = "Trace"
+	else
+	game:GetService('CoreGui').HUD.Frame.Trace:Destroy()
+end
+	tracer = value
+	end)
+		local Toggle1 = Tab5:NewToggle("Name Esp", false, function(value)
+					getgenv().yes8 = value
+			local UserInputService = game:GetService('UserInputService')
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes8 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "NameEsp"
+	clone.Text = "NameEsp"
+	else
+	game:GetService('CoreGui').HUD.Frame.NameEsp:Destroy()
+end
+	getgenv().chek = value
+	end)
+	local fov = 120
+			local Toggle1 = Tab5:NewToggle("FOV", false, function(value)
+					getgenv().yes9 = value
+			local UserInputService = game:GetService('UserInputService')
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes9 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "FieldOfView"
+	clone.Text = "FieldOfView"
+	else
+	game:GetService('CoreGui').HUD.Frame.FieldOfView:Destroy()
+end
+	game:GetService('RunService').RenderStepped:Connect(function()
+		if getgenv().yes9 then
+			game.Workspace.Camera.FieldOfView = fov
+			else
+			game.Workspace.Camera.FieldOfView = 70
+		end
+	end)
+	end)
+	local Slider1 = Tab5:NewSlider("FOV:", "", true, "/", {min = 1, max = 140, default = 100}, function(value)
+    fov = value
+end)
+local noclipping = nil
+local Toggle1 = Tab6:NewToggle("WallHack", false, function(value)
+	getgenv().yes10 = value
+	local function noclip()
+		for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+	if v:IsA('BasePart') then
+		v.CanCollide = false
+	end
+end
+end
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes10 then
+			noclipping = game:GetService('RunService').RenderStepped:Connect(noclip)
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "WallHack"
+	clone.Text = "WallHack"
+	else
+	noclipping:Disconnect()
+	game:GetService('CoreGui').HUD.Frame.WallHack:Destroy()
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+	if v:IsA('BasePart') then
+		v.CanCollide = true
+	end
+end
+end
+end):AddKeybind(Enum.KeyCode.Y)
+local grav = 20
+local Slider1 = Tab6:NewSlider("Gravity", "", true, "/", {min = 1, max = 196, default = 50}, function(value)
+    grav = value
+    print(value)
+end)
+local function gravt()
+	game.Workspace.Gravity = grav
+end
+local con = nil
+
+local Toggle1 = Tab6:NewToggle("Gravity", false, function(value)
+
+getgenv().yes11 = value
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes11 then
+			con = game:GetService('RunService').RenderStepped:Connect(gravt)
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "Gravity"
+	clone.Text = "Gravity"
+	else
+	con:Disconnect()
+	game.Workspace.Gravity = 196
+	game:GetService('CoreGui').HUD.Frame.Gravity:Destroy()
+end
+end)
+local f = 3
+local say = "Pecter.lua client stay winning :nerd:"
+local Toggle1 = Tab3:NewToggle("Spam Chat", false, function(value)
+	getgenv().yes12 = value
+		local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes12 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "SpamChat"
+	clone.Text = "Spam Chat"
+	else
+	game:GetService('CoreGui').HUD.Frame.SpamChat:Destroy()
+end
+	while getgenv().yes12 do wait(f)
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(say, "All")
+end
+end)
+
+local Slider1 = Tab3:NewSlider("Spam delay", "", true, "/", {min = 1, max = 10, default = 3}, function(value)
+    f = value
+end)
+local Textbox3 = Tab3:NewTextbox("Spam text", "", "3", "all", "large", true, false, function(val)
+    say = val
+end)
+
+local Toggle1 = Tab2:NewToggle("Prevents unknown packets that damage u", false, function(value)
+getgenv().yes13 = value
+local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().yes13 then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "AntiPacket"
+	clone.Text = "Anti Random Packet Damage"
+	else
+	game:GetService('CoreGui').HUD.Frame.AntiPacket:Destroy()
+end
+local mt = getrawmetatable(game)
+make_writeable(mt)
+
+local namecall = mt.__namecall
+
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+
+    if getgenv().yes13 and method == "FireServer" and tostring(self) == "RequestDamage" then
+       return
+    end
+    return namecall(self, table.unpack(args))
+end)
+end)
+	local function fullbright()
+		game.Lighting.Brightness = 2
+		game.Lighting.ClockTime = 14
+		game.Lighting.FogEnd = 100000
+		game.Lighting.GlobalShadows = false
+		game.Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+	end
+	local loopagain = nil
+	local Toggle1 = Tab6:NewToggle("FullBright", false, function(value)
+getgenv().fullbright = value
+		local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().fullbright then
+			loopagain = game:GetService('RunService').RenderStepped:Connect(fullbright)
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "Fullbright"
+	clone.Text = "Fullbright"
+	else
+	game:GetService('CoreGui').HUD.Frame.Fullbright:Destroy()
+	loopagain:Disconnect()
+end
+end)
+
+
+
+local Ping = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
+
+--Properties:
+
+Ping.Name = "Ping"
+Ping.Parent = game:GetService('CoreGui')
+Ping.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+TextLabel.Parent = Ping
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.Position = UDim2.new(0.899999976, 0, 0.920408189, 0)
+TextLabel.Size = UDim2.new(0.100000001, 0, 0.0795918331, 0)
+TextLabel.Font = Enum.Font.Gotham
+TextLabel.Text = "Ping : nil"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextWrapped = true
+
+local PerformanceStats = game:GetService("CoreGui"):WaitForChild("RobloxGui"):WaitForChild("PerformanceStats");
+local PingLabel;
+for I, Child in next, PerformanceStats:GetChildren() do
+    if Child.StatsMiniTextPanelClass.TitleLabel.Text == "Ping" then
+        PingLabel = Child.StatsMiniTextPanelClass.ValueLabel;
+        break;
+    end;
+end;
+local ping = 1
+PingLabel:GetPropertyChangedSignal("Text"):Connect(function()
+    TextLabel.Text = "Ping : "..PingLabel.Text
+end);
