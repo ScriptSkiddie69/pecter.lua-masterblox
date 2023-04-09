@@ -609,6 +609,27 @@ end
 	condection:Disconnect()
 end
 end)
+local function jump()
+game.Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid'):ChangeState(3)
+end
+local Toggle1 = Tab4:NewToggle("AirJump", false, function(value)
+	getgenv().air = value
+	local clone = game:GetService('CoreGui').HUD.text:Clone()
+		if getgenv().air then
+	clone.Parent = game:GetService('CoreGui').HUD.Frame 
+	clone.Name = "AirJump"
+	clone.Text = "AirJump"
+	else
+	game:GetService('CoreGui').HUD.Frame.AirJump:Destroy()
+end
+local uis = game:GetService('UserInputService')
+
+uis.InputBegan:Connect(function(input)
+	if getgenv().air and input.KeyCode == Enum.KeyCode.Space then
+		jump()
+	end
+end)
+end)
 local Ping = Instance.new("ScreenGui")
 local TextLabel = Instance.new("TextLabel")
 
