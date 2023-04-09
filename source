@@ -337,7 +337,7 @@ getgenv().yes4 = value
 	game:GetService('CoreGui').HUD.Frame.AutoLeave:Destroy()
 end
 end)
-local Toggle1 = Tab2:NewToggle("Packet Mine press T", false, function(value)
+local Toggle1 = Tab2:NewToggle("Packet Mine right click and dont hold leftclick", false, function(value)
 		getgenv().yes5 = value
 	if getgenv().yes5 then
 	local clone = game:GetService('CoreGui').HUD.text:Clone()
@@ -351,7 +351,7 @@ end
 	
 	uis.InputBegan:Connect(function(input,gp)
 		if getgenv().yes5 then
-		if input.KeyCode == Enum.KeyCode.T then--input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton2 then--input.UserInputType == Enum.UserInputType.MouseButton1 then
 local mouseLocation = game.Players.LocalPlayer:GetMouse().Target
 local t = mouseLocation.Position.X--math.floor(mouseLocation.X)
 local r = mouseLocation.Position.Y--math.floor(mouseLocation.Y)
