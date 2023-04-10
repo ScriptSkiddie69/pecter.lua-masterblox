@@ -1,6 +1,7 @@
 	if game:GetService('CoreGui'):FindFirstChild('HUD') then
 game:GetService('CoreGui'):FindFirstChild('HUD'):Destroy()
 	end
+	if key == "evilgang" then
 	local function getplrname(shortName)
    shortName = string.lower(shortName)
    for _,Player in pairs(game.Players:GetPlayers()) do
@@ -663,3 +664,4 @@ local ping = 1
 PingLabel:GetPropertyChangedSignal("Text"):Connect(function()
     TextLabel.Text = "Ping : "..PingLabel.Text
 end);
+end
